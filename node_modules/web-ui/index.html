@@ -11,3 +11,363 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Miner Worker</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #000;
+        color: #39ff14;
+        display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 220px; 
+        height: 100vh;
+        background-color: #000;
+        border-right: 2px solid #39ff14;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    /* Home header */
+    .sidebar h2 {
+        margin: 0 0 15px 0;
+        font-size: 27px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar h2 a {
+        color: #39ff14;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .sidebar h2 a:hover {
+        background-color: #39ff14;
+        color: #000;
+    }
+
+    .sidebar h2 img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+        vertical-align: middle;
+        transition: 0.2s;
+    }
+
+    .sidebar h2 a:hover img {
+        filter: brightness(0);
+    }
+
+    /* Menu sections */
+    .menu-section {
+        margin-top: 20px;
+    }
+
+    .menu-section h3 {
+        font-size: 21px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 14px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .menu-section h3:hover {
+        background-color: #39ff14;
+        color: #000;
+    }
+
+    .menu-section h3 .arrow {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        font-size: 12px;
+        transition: transform 0.3s ease;
+    }
+
+    .menu-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.3s ease;
+        padding-left: 0;
+        margin-left: 14px;
+        border-left: 2px solid #39ff14;
+    }
+
+    .menu-section.active ul {
+        max-height: 500px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    .menu-section.active h3 .arrow {
+        transform: rotate(180deg);
+    }
+
+    .menu-section li {
+        padding: 12px 12px;
+        margin-bottom: 12px;
+        border-radius: 4px;
+        transition: 0.2s;
+        font-size: 17.5px;
+        line-height: 1.25;
+    }
+
+    .menu-section li:last-child {
+        margin-bottom: 0;
+    }
+
+    .menu-section li a {
+        color: #39ff14;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-section li:hover {
+        background-color: #39ff14;
+    }
+
+    .menu-section li:hover a {
+        color: #000;
+    }
+
+    /* Main content area */
+    .main-content {
+        flex-grow: 1;
+        padding: 30px;
+        display: none; /* hidden until Home clicked */
+    }
+
+    .main-content.active {
+        display: block; /* show the active screen */
+    }
+
+    .top-boxes {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .box {
+        flex: 1;
+        text-align: center;
+        border: 2px solid #39ff14;
+        margin: 0 10px;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .box img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .divider {
+        border-bottom: 2px solid #39ff14;
+        margin: 20px 0;
+    }
+
+    /* Button states */
+    .enable-btn {
+        margin-top: 10px;
+        padding: 16px 26px;
+        border: 4px solid #39ff14;
+        border-radius: 6px;
+        font-size: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    /* Disabled state: green background, black text */
+    .enable-btn.disabled {
+        background-color: #39ff14;
+        color: #000;
+    }
+
+    /* Enabled state: black background, green text */
+    .enable-btn.enabled {
+        background-color: #000;
+        color: #39ff14;
+        border: 4px solid #39ff14;
+    }
+
+</style>
+</head>
+<body>
+    <div class="sidebar">
+
+        <!-- Home -->
+        <h2>
+            <a href="#" id="home-btn">
+                <img src="https://img.icons8.com/ios-filled/50/39ff14/home.png" alt="Home">
+                Home
+            </a>
+        </h2>
+
+        <!-- Management -->
+        <div class="menu-section">
+            <h3>Management <span class="arrow">▼</span></h3>
+            <ul>
+                <li><a href="#"><span class="icon">🖥️</span>Devices</a></li>
+                <li><a href="#"><span class="icon">🗂️</span>Configurations</a></li>
+                <li><a href="#"><span class="icon">🏷️</span>Labels</a></li>
+            </ul>
+        </div>
+
+        <!-- Finances -->
+        <div class="menu-section">
+            <h3>Finances <span class="arrow">▼</span></h3>
+            <ul>
+                <li><a href="#"><span class="icon">🏦</span>Accounts</a></li>
+                <li><a href="#"><span class="icon">💲</span>Transactions</a></li>
+                <li><a href="#"><span class="icon">💰</span>Wallets</a></li>
+            </ul>
+        </div>
+
+        <!-- Settings -->
+        <div class="menu-section">
+            <h3>Settings <span class="arrow">▼</span></h3>
+            <ul>
+                <li><a href="#"><span class="icon">🏢</span>Organization</a></li>
+                <li><a href="#"><span class="icon">💳</span>Payment</a></li>
+                <li><a href="#"><span class="icon">👥</span>Users</a></li>
+                <li><a href="#"><span class="icon">⚙️</span>Preferences</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Home Screen -->
+    <div class="main-content" id="home-screen">
+        <div class="top-boxes">
+            <!-- Left: Average Hashrate -->
+            <div class="box">
+                <div style="font-size:40px; font-weight:bold; margin-bottom:20px;">Average Hashrate</div>
+                <div style="font-size:45px;">0 H/s</div>
+            </div>
+
+            <!-- Middle: Enable/Disable -->
+            <div class="box">
+                <div style="font-size:40px; font-weight:bold; margin-bottom:20px;">Mining</div>
+                <button class="enable-btn enabled">Enable</button>
+            </div>
+
+            <!-- Right: Shares -->
+            <div class="box">
+                <div style="font-size:40px; font-weight:bold; margin-bottom:20px;">Shares</div>
+                <div style="font-size:35px;">Valid: 0 | Invalid: 0</div>
+            </div>
+        </div>
+        <div class="divider"></div>
+    </div>
+
+    <script>
+        // Toggle dropdowns - only one open at a time
+        const sections = document.querySelectorAll('.menu-section h3');
+        sections.forEach(section => {
+            section.addEventListener('click', () => {
+                const parent = section.parentElement;
+
+                // Close all other sections
+                sections.forEach(sec => {
+                    if (sec !== section) {
+                        sec.parentElement.classList.remove('active');
+                        const ul = sec.parentElement.querySelector('ul');
+                        if (ul) ul.style.maxHeight = '0px';
+                    }
+                });
+
+                // Toggle clicked section
+                parent.classList.toggle('active');
+                const ul = parent.querySelector('ul');
+                if (parent.classList.contains('active')) {
+                    ul.style.maxHeight = ul.scrollHeight + 'px';
+                } else {
+                    ul.style.maxHeight = '0px';
+                }
+            });
+        });
+
+        // Ensure submenus collapse on load
+        document.querySelectorAll('.menu-section').forEach(ms => {
+            const ul = ms.querySelector('ul');
+            if (ul) ul.style.maxHeight = '0px';
+        });
+
+        // Keep heights correct on resize
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.menu-section.active').forEach(ms => {
+                const ul = ms.querySelector('ul');
+                if (ul) ul.style.maxHeight = ul.scrollHeight + 'px';
+            });
+        });
+
+        // Show Home screen when clicking Home button
+        const homeBtn = document.getElementById('home-btn');
+        const homeScreen = document.getElementById('home-screen');
+
+        homeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            homeScreen.style.display = 'block';
+        });
+
+        // Enable/Disable button toggle
+        const enableBtn = document.querySelector('.enable-btn');
+
+        enableBtn.addEventListener('click', () => {
+            if (enableBtn.classList.contains('enabled')) {
+                enableBtn.classList.remove('enabled');
+                enableBtn.classList.add('disabled');
+                enableBtn.textContent = 'Disable';
+            } else {
+                enableBtn.classList.remove('disabled');
+                enableBtn.classList.add('enabled');
+                enableBtn.textContent = 'Enable';
+            }
+        });
+
+        // When the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            const homeScreen = document.getElementById('home-screen');
+            homeScreen.classList.add('active'); // show Home screen
+        });
+
+        // Optional: toggle screens when clicking sidebar buttons
+        const homeButton = document.querySelector('.sidebar h2 a');
+        homeButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.main-content').forEach(screen => {
+                screen.classList.remove('active'); // hide all
+            });
+            document.getElementById('home-screen').classList.add('active'); // show Home
+        });
+
+    </script>
+</body>
+</html> -->

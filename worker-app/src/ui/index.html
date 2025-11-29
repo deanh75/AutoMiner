@@ -1,16 +1,401 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Worker App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Miner Worker</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #000;
+        color: #39ff14;
+        display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 220px; 
+        height: 100vh;
+        background-color: #000;
+        border-right: 2px solid #39ff14;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    /* Home header */
+    .sidebar h2 {
+        margin: 0 0 15px 0;
+        font-size: 40px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar h2 a {
+        color: #39ff14;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .sidebar h2 a:hover {
+        background-color: #39ff14;
+        color: #000;
+    }
+
+    .sidebar h2 img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+        vertical-align: middle;
+        transition: 0.2s;
+    }
+
+    .sidebar h2 a:hover img {
+        filter: brightness(0);
+    }
+
+    /* Menu sections */
+    .menu-section {
+        margin-top: 20px;
+    }
+
+    .menu-section h3 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        padding: 12px 14px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    .menu-section h3:hover {
+        background-color: #39ff14;
+        color: #000;
+    }
+
+    .menu-section h3 .icon {
+        margin-right: 4px;
+        display: inline-block;
+    }
+
+    /* Main content area */
+    .main-content {
+        flex-grow: 1;
+        padding: 30px;
+        display: none; /* hidden until Home clicked */
+    }
+
+    .main-content.active {
+        display: block; /* show the active screen */
+    }
+
+    .top-boxes {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .box {
+        flex: 1;
+        text-align: center;
+        border: 2px solid #39ff14;
+        margin: 0 10px;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .box img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .divider {
+        border-bottom: 2px solid #39ff14;
+        margin: 20px 0;
+    }
+
+    /* Button states */
+    .enable-btn {
+        margin-top: 10px;
+        padding: 16px 26px;
+        border: 4px solid #39ff14;
+        border-radius: 6px;
+        font-size: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    /* Disabled state: green background, black text */
+    .enable-btn.disabled {
+        background-color: #39ff14;
+        color: #000;
+    }
+
+    /* Enabled state: black background, green text */
+    .enable-btn.enabled {
+        background-color: #000;
+        color: #39ff14;
+        border: 4px solid #39ff14;
+    }
+
+    .stat-header {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .stat-divider {
+        border-bottom: 6px dotted #39ff14;
+        margin: 15px 0;
+    }
+
+    .stat-spacer {
+        height: 10px;
+    }
+
+    .gpu-stat-spacer {
+        height: 30px;
+    }
+
+    /* CPU name box */
+    .info-box{
+        background:rgba(57,255,20,0.03);
+        border:1px solid rgba(57,255,20,0.12);
+        padding:12px;
+        border-radius:12px;
+        margin-bottom:15px;
+        text-align:center;
+    }
+
+    .name{
+        font-size:30px;
+        font-weight:700;
+    }
+
+    .brand{
+        font-size:18px;
+        opacity:0.8;
+    }
+
+    /* Stats row */
+    .stats-row{
+        display:flex;
+        gap:22px;
+        justify-content:space-between;
+    }
+
+    .stat-box{
+        flex:1;
+        background:rgba(57,255,20,0.03);
+        border:1px solid rgba(57,255,20,0.12);
+        padding:10px;
+        border-radius:12px;
+        text-align:center;
+        min-height:125px;        /* forces all boxes to same height */
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+    }
+
+    .box-label{
+        font-size:25px;
+        opacity:0.9;
+        margin-bottom:8px;
+    }
+
+    .box-value{
+        font-size:42px;
+        font-weight:800;
+        margin-top:4px;
+    }
+
+    .ring{
+        width:120px;
+        height:120px;
+        margin:0 auto;
+        position:relative;
+    }
+
+    .ring-center{
+        position:absolute;
+        inset:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:20px;
+        font-weight:700;
+    }
+
+    #ringFill {
+        transition: stroke-dashoffset 0.5s ease;
+    }
+
+</style>
 </head>
 <body>
-    <div id="cpu">CPU: </div>
-    <div id="gpu">GPU: </div>
-    <div id="cpu_temp">CPU Temp: </div>
-    <div id="gpu_temp">GPU Temp: </div>
-    <div id="uptime">Uptime: </div>
+    <div class="sidebar">
+
+        <!-- Home -->
+        <h2>
+            <a href="#" id="home-btn">
+                <img src="https://img.icons8.com/ios-filled/50/39ff14/home.png" alt="Home">
+                Home
+            </a>
+        </h2>
+
+        <!-- Management -->
+        <div class="menu-section">
+            <h3><span class="icon">👤</span>User</h3>
+        </div>
+
+        <!-- Finances -->
+        <div class="menu-section">
+            <h3><span class="icon">⚙️</span>Preferences</h3>
+        </div>
+
+        <!-- Settings -->
+        <div class="menu-section">
+            <h3><span class="icon">🔧</span>Settings</h3>
+        </div>
+    </div>
+
+    <!-- Home Screen -->
+    <div class="main-content" id="home-screen">
+        <div class="top-boxes">
+            <!-- Left: Average Hashrate -->
+            <div class="box">
+                <div style="font-size:40px; font-weight:bold; margin-bottom:20px;">Average Hashrate</div>
+                <div style="font-size:45px;">0 H/s</div>
+            </div>
+
+            <!-- Middle: Enable/Disable -->
+            <div class="box">
+                <div style="font-size:40px; font-weight:bold; margin-bottom:20px;">Mining</div>
+                <button class="enable-btn enabled">Enable</button>
+            </div>
+
+            <!-- Right: Shares -->
+            <div class="box">
+                <div style="font-size:40px; font-weight:bold; margin-bottom:20px;">Shares</div>
+                <div style="font-size:35px;">Valid: 0 | Invalid: 0</div>
+            </div>
+        </div>
+        
+        <div class="stat-spacer"></div>
+        <div class="stat-header">CPU Stats</div>
+        <div class="stat-divider"></div>
+        
+        <!-- CPU INFO + STATS SECTION -->
+        <div id="cpu-stat-section">
+            <!-- CPU Name + Brand -->
+            <div class="info-box">
+                <div class="name" id="cpuName">Unknown CPU</div>
+                <div class="brand" id="cpuSpecs"></div>
+            </div>
+
+            <div class="stats-row">
+
+                <!-- Hashrate -->
+                <div class="stat-box">
+                    <div class="box-label">Hashrate</div>
+                    <div class="box-value" id="hashrate">... H/s</div>
+                </div>
+
+                <!-- Temperature -->
+                <div class="stat-box">
+                    <div class="box-label">CPU Temp</div>
+                    <div class="box-value" id="cpuTemp">N/A</div>
+                </div>
+
+                <!-- CPU Load Ring -->
+                <div class="stat-box">
+                    <div class="box-label">CPU Load</div>
+
+                    <div class="ring">
+                        <svg width="120" height="120">
+                        <circle cx="60" cy="60" r="48"
+                            stroke="rgba(57,255,20,0.12)"
+                            stroke-width="12" fill="none"></circle>
+
+                        <circle id="ringFill" cx="60" cy="60" r="48"
+                            stroke="url(#grad)" stroke-width="12"
+                            fill="none" stroke-linecap="round"
+                            stroke-dasharray="301.59"
+                            stroke-dashoffset="301.59"
+                            transform="rotate(90 60 60)"></circle>
+
+                        <defs>
+                            <linearGradient id="grad" x1="0" x2="1">
+                                <stop offset="0" stop-color="#39ff14"/>
+                                <stop offset="1" stop-color="#9cff88"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="ring-center" id="cpuLoad">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gpu-stat-spacer"></div>
+        <div class="stat-header">GPU Stats</div>
+        <div class="stat-divider"></div>
+
+    </div>
 
     <script type="module" src="./renderer.js"></script>
+    <script>
+        // Show Home screen when clicking Home button
+        const homeBtn = document.getElementById('home-btn');
+        const homeScreen = document.getElementById('home-screen');
+
+        homeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            homeScreen.style.display = 'block';
+        });
+
+        // Enable/Disable button toggle
+        const enableBtn = document.querySelector('.enable-btn');
+
+        enableBtn.addEventListener('click', () => {
+            if (enableBtn.classList.contains('enabled')) {
+                enableBtn.classList.remove('enabled');
+                enableBtn.classList.add('disabled');
+                enableBtn.textContent = 'Disable';
+            } else {
+                enableBtn.classList.remove('disabled');
+                enableBtn.classList.add('enabled');
+                enableBtn.textContent = 'Enable';
+            }
+        });
+
+        // When the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            const homeScreen = document.getElementById('home-screen');
+            homeScreen.classList.add('active'); // show Home screen
+        });
+
+        // Optional: toggle screens when clicking sidebar buttons
+        const homeButton = document.querySelector('.sidebar h2 a');
+        homeButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.main-content').forEach(screen => {
+                screen.classList.remove('active'); // hide all
+            });
+            document.getElementById('home-screen').classList.add('active'); // show Home
+        });
+
+    </script>
 </body>
 </html>
