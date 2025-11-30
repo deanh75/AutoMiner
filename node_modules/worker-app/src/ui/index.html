@@ -169,7 +169,7 @@
         height: 30px;
     }
 
-    /* CPU name box */
+    /* Stat name box */
     .info-box{
         background:rgba(57,255,20,0.03);
         border:1px solid rgba(57,255,20,0.12);
@@ -242,6 +242,13 @@
         transition: stroke-dashoffset 0.5s ease;
     }
 
+    /* Settings screen layout */
+    .settings-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
 </style>
 </head>
 <body>
@@ -255,18 +262,13 @@
             </a>
         </h2>
 
-        <!-- Management -->
-        <div class="menu-section">
+        <!-- User -->
+        <div class="menu-section" id="user-btn">
             <h3><span class="icon">👤</span>User</h3>
         </div>
 
-        <!-- Finances -->
-        <div class="menu-section">
-            <h3><span class="icon">⚙️</span>Preferences</h3>
-        </div>
-
         <!-- Settings -->
-        <div class="menu-section">
+        <div class="menu-section" id="settings-btn">
             <h3><span class="icon">🔧</span>Settings</h3>
         </div>
     </div>
@@ -302,26 +304,38 @@
             <!-- CPU Name + Brand -->
             <div class="info-box">
                 <div class="name" id="cpuName">Unknown CPU</div>
-                <div class="brand" id="cpuSpecs"></div>
+                <div class="brand" id="cpuCores"></div>
             </div>
 
             <div class="stats-row">
 
-                <!-- Hashrate -->
+                <!-- CPU Hashrate -->
                 <div class="stat-box">
                     <div class="box-label">Hashrate</div>
-                    <div class="box-value" id="hashrate">... H/s</div>
+                    <div class="box-value" id="cpuHashrate">... H/s</div>
                 </div>
 
-                <!-- Temperature -->
+                <!-- CPU Threads -->
                 <div class="stat-box">
-                    <div class="box-label">CPU Temp</div>
-                    <div class="box-value" id="cpuTemp">N/A</div>
+                    <div class="box-label">Threads</div>
+                    <div class="box-value" id="cpuThreads">0</div>
+                </div>
+
+                <!-- CPU Speed -->
+                <div class="stat-box">
+                    <div class="box-label">Speed</div>
+                    <div class="box-value" id="cpuSpeed">0 GHz</div>
+                </div>
+
+                <!-- CPU Temperature -->
+                <div class="stat-box">
+                    <div class="box-label">Temp</div>
+                    <div class="box-value" id="cpuTemp">0 °F</div>
                 </div>
 
                 <!-- CPU Load Ring -->
                 <div class="stat-box">
-                    <div class="box-label">CPU Load</div>
+                    <div class="box-label">Load</div>
 
                     <div class="ring">
                         <svg width="120" height="120">
@@ -329,7 +343,7 @@
                             stroke="rgba(57,255,20,0.12)"
                             stroke-width="12" fill="none"></circle>
 
-                        <circle id="ringFill" cx="60" cy="60" r="48"
+                        <circle id="cpuRingFill" cx="60" cy="60" r="48"
                             stroke="url(#grad)" stroke-width="12"
                             fill="none" stroke-linecap="round"
                             stroke-dasharray="301.59"
@@ -352,50 +366,86 @@
         <div class="stat-header">GPU Stats</div>
         <div class="stat-divider"></div>
 
+        <!-- GPU INFO + STATS SECTION -->
+        <div id="gpu-stat-section">
+
+            <!-- GPU Name + Brand -->
+            <div class="info-box">
+                <div class="name" id="gpuName">Unknown GPU</div>
+                <div class="brand" id="gpuSpecs"></div>
+            </div>
+
+            <div class="stats-row">
+
+                <!-- GPU Hashrate -->
+                <div class="stat-box">
+                    <div class="box-label">Hashrate</div>
+                    <div class="box-value" id="gpuHashrate">... H/s</div>
+                </div>
+
+                <!-- GPU Memory Clock -->
+                <div class="stat-box">
+                    <div class="box-label">Memory Clock</div>
+                    <div class="box-value" id="gpuMemClock">0 MHz</div>
+                </div>
+
+                <!-- GPU Core Clock -->
+                <div class="stat-box">
+                    <div class="box-label">Core Clock</div>
+                    <div class="box-value" id="gpuCoreClock">0 MHz</div>
+                </div>
+
+                <!-- GPU Temp -->
+                <div class="stat-box">
+                    <div class="box-label">Temp</div>
+                    <div class="box-value" id="gpuTemp">0 °F</div>
+                </div>
+
+                <!-- GPU Load Ring -->
+                <div class="stat-box">
+                    <div class="box-label">Load</div>
+
+                    <div class="ring">
+                        <svg width="120" height="120">
+                            <circle cx="60" cy="60" r="48"
+                                stroke="rgba(57,255,20,0.12)"
+                                stroke-width="12" fill="none">
+                            </circle>
+
+                            <circle id="gpuRingFill" cx="60" cy="60" r="48"
+                                stroke="url(#grad)" stroke-width="12"
+                                fill="none" stroke-linecap="round"
+                                stroke-dasharray="301.59"
+                                stroke-dashoffset="301.59"
+                                transform="rotate(90 60 60)">
+                            </circle>
+
+                            <defs>
+                                <linearGradient id="grad" x1="0" x2="1">
+                                    <stop offset="0" stop-color="#39ff14"/>
+                                    <stop offset="1" stop-color="#9cff88"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="ring-center" id="gpuCoreLoad">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <script type="module" src="./renderer.js"></script>
-    <script>
-        // Show Home screen when clicking Home button
-        const homeBtn = document.getElementById('home-btn');
-        const homeScreen = document.getElementById('home-screen');
+    <div class="main-content" id="settings-screen">
+        <div class="settings-content">
+            <label for="temp-units">Temp Units:</label>
+            <select id="temp-units">
+                <option value="C">C</option>
+                <option value="F">F</option>
+            </select>
+        </div>
+    </div>
 
-        homeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            homeScreen.style.display = 'block';
-        });
-
-        // Enable/Disable button toggle
-        const enableBtn = document.querySelector('.enable-btn');
-
-        enableBtn.addEventListener('click', () => {
-            if (enableBtn.classList.contains('enabled')) {
-                enableBtn.classList.remove('enabled');
-                enableBtn.classList.add('disabled');
-                enableBtn.textContent = 'Disable';
-            } else {
-                enableBtn.classList.remove('disabled');
-                enableBtn.classList.add('enabled');
-                enableBtn.textContent = 'Enable';
-            }
-        });
-
-        // When the page loads
-        window.addEventListener('DOMContentLoaded', () => {
-            const homeScreen = document.getElementById('home-screen');
-            homeScreen.classList.add('active'); // show Home screen
-        });
-
-        // Optional: toggle screens when clicking sidebar buttons
-        const homeButton = document.querySelector('.sidebar h2 a');
-        homeButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelectorAll('.main-content').forEach(screen => {
-                screen.classList.remove('active'); // hide all
-            });
-            document.getElementById('home-screen').classList.add('active'); // show Home
-        });
-
-    </script>
+    <script type="module" src="./stats.js"></script>
+    <script type="module" src="./ui.js"></script>
 </body>
 </html>

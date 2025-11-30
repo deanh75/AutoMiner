@@ -4,13 +4,17 @@ declare global {
     interface Window {
         systemInfo: {
             getCPUName: () => Promise<string>;
-            getCPUSpecs: () => Promise<string>;
+            getCPUCores: () => Promise<string>;
+            getCPUThreads: () => Promise<number>;
             getCPUTemp: () => Promise<string>;
             getCPULoad: () => Promise<string>;
-            // getGPU: () => Promise<string>;
-            // getGPUTemp: () => Promise<number | string>;
-            // getGPUClock: () => Promise<number | string>;
-            // getGPULoad: () => Promise<number | string>;
+            getCPUSpeed: () => Promise<string>;
+            getGPU: () => Promise<string>;
+            getGPUTemp: () => Promise<string>;
+            getGPUCoreClock: () => Promise<string>;
+            getGPUMemClock: () => Promise<string>;
+            getGPULoad: () => Promise<string>;
+            getGPUTotalMem: () => Promise<string>;
         };
 
         appInfo: {

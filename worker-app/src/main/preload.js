@@ -78,37 +78,55 @@ contextBridge.exposeInMainWorld("systemInfo", {
     getCPUName: async () => {
         const cpu = await si.cpu();
         const cleaned = cpu.brand.replace(/\s\d+-Core Processor.*/i, '');
-        return cleaned ?? "Unknown CPU";
+        return cpu.manufacturer + " " + (cleaned ?? "Unknown CPU");
     },
-    getCPUSpecs: async () => {
+    getCPUCores: async () => {
         const cpu = await si.cpu();
-        const match = cpu.brand.match(/\s\d+-Core Processor.*/i);
-        return match ? match[0] : '';
+        return cpu.physicalCores + "-Core Processor";
+        // const match = cpu.brand.match(/\s\d+-Core Processor.*/i);
+        // return match ? match[0] : '';
+    },
+    getCPUThreads: async () => {
+        const cpu = await si.cpu();
+        return cpu.cores;
     },
     getCPUTemp: async () => {
-        const value = await waitForValue(() => loadSensorData(), "Temperature", "Core (Tctl/Tdie)") || "0%";
+        const value = await waitForValue(() => loadSensorData(), "Temperature", "Core (Tctl/Tdie)");
         return value;
     },
     getCPULoad: async () => {
-        const value = await waitForValue(() => loadSensorData(), "Load", "CPU Total") || "0%";
+        const value = await waitForValue(() => loadSensorData(), "Load", "CPU Total");
         return value;
+    },
+    getCPUSpeed: async () => {
+        const cpu = await si.cpu();
+        return cpu.speed + " GHz";
     },
     getGPU: async () => {
         const graphics = await si.graphics();
         const physicalGPUs = filterPhysicalGPUs(graphics.controllers ?? []);
-        return physicalGPUs.map(g => g.model).join(", ") || "No GPU found";
+        return physicalGPUs.map(g => g.model).join(", ");
     },
     getGPUTemp: async () => {
-        const value = await waitForValue(() => loadSensorData(), "Temperature", "GPU Core") || "N/A";
+        const value = await waitForValue(() => loadSensorData(), "Temperature", "GPU Core");
         return value;
     },
-    getGPUClock: async () => {
-        const value = await waitForValue(() => loadSensorData(), "Clock", "GPU Core") || "N/A";
+    getGPUCoreClock: async () => {
+        const value = await waitForValue(() => loadSensorData(), "Clock", "GPU Core");
+        return value;
+    },
+    getGPUMemClock: async () => {
+        const value = await waitForValue(() => loadSensorData(), "Clock", "GPU Memory");
         return value;
     },
     getGPULoad: async () => {
-        const value = await waitForValue(() => loadSensorData(), "Load", "GPU Core") || "N/A";
+        const value = await waitForValue(() => loadSensorData(), "Load", "GPU Core");
         return value;
+    },
+    getGPUTotalMem: async () => {
+        const graphics = await si.graphics();
+        const physicalGPUs = filterPhysicalGPUs(graphics.controllers ?? []);
+        return physicalGPUs.map(g => g.vram + " MB").join(", ");
     }
 });
 //# sourceMappingURL=preload.js.map
