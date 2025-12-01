@@ -16,4 +16,4 @@ export {};
 //         miner = null;
 //     }
 // }
-//# sourceMappingURL=bat-runner.js.map
+//# sourceMappingURL=miner-runner.js.map

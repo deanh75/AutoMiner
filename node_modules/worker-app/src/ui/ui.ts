@@ -12,28 +12,44 @@ const screens = {
 };
 
 // Function to show a screen and hide the others
+// function showScreen(screenName: keyof typeof screens) {
+//     for (const key in screens) {
+//         if (screens[key as keyof typeof screens]) {
+//             (screens[key as keyof typeof screens] as HTMLElement).style.display =
+//                 key === screenName ? 'block' : 'none';
+//         }
+//     }
+// }
 function showScreen(screenName: keyof typeof screens) {
     for (const key in screens) {
-        if (screens[key as keyof typeof screens]) {
-            (screens[key as keyof typeof screens] as HTMLElement).style.display =
-                key === screenName ? 'block' : 'none';
+        const screen = screens[key as keyof typeof screens] as HTMLElement;
+        if (!screen) continue;
+
+        if (key === screenName) {
+            screen.classList.add('active');
+        } else {
+            screen.classList.remove('active');
         }
     }
 }
 
+
 // Add click listeners to buttons
 buttons.home?.addEventListener('click', (e) => {
     e.preventDefault();
+    console.log("Home screen shown");
     showScreen('home');
 });
 
 buttons.user?.addEventListener('click', (e) => {
     e.preventDefault();
+    console.log("User screen shown");
     showScreen('user');
 });
 
 buttons.settings?.addEventListener('click', (e) => {
     e.preventDefault();
+    console.log("Settings screen shown");
     showScreen('settings');
 });
 
@@ -54,5 +70,6 @@ enableBtn?.addEventListener('click', () => {
 
 // Show Home screen by default when page loads
 window.addEventListener('DOMContentLoaded', () => {
+    console.log("Defaulting to Home screen");
     showScreen('home');
 });

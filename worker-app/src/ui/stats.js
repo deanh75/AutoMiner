@@ -35,9 +35,6 @@ async function updateStats() {
     if (!window.systemInfo)
         return;
     cpuNameEl.textContent = (await window.systemInfo.getCPUName());
-    cpuCoresEl.textContent = (await window.systemInfo.getCPUCores());
-    cpuThreadsEl.textContent = (await window.systemInfo.getCPUThreads()).toString();
-    cpuSpeedEl.textContent = (await window.systemInfo.getCPUSpeed());
     cpuTempEl.textContent = (await window.systemInfo.getCPUTemp());
     setCpuLoad(await window.systemInfo.getCPULoad());
     gpuEl.textContent = (await window.systemInfo.getGPU());
@@ -48,7 +45,20 @@ async function updateStats() {
     setGpuLoad(await window.systemInfo.getGPULoad());
     // uptimeEl.textContent = "Uptime: " + window.appInfo.getDynamicUptime();
 }
-// Update every second
+async function updateStaticCPUInfo() {
+    if (!window.systemInfo)
+        return;
+    cpuCoresEl.textContent = (await window.systemInfo.getCPUCores());
+    cpuThreadsEl.textContent = (await window.systemInfo.getCPUThreads()).toString();
+    cpuSpeedEl.textContent = await window.systemInfo.getCPUSpeed();
+}
+// async function updateDynamicCPUInfo() {
+//     if (!window.systemInfo) return;
+//     cpuSpeedEl.textContent = await window.systemInfo.getCPUSpeed();
+// }
+updateStaticCPUInfo();
+// setInterval(updateDynamicCPUInfo, 5000);
+// updateDynamicCPUInfo();
 setInterval(updateStats, 1000);
 updateStats();
 export {};

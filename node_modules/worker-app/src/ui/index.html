@@ -238,15 +238,36 @@
         font-weight:700;
     }
 
-    #ringFill {
+    .ringFill {
         transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .settings-header {
+        font-size: 35px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .settings-divider {
+        border-bottom: 6px dotted #39ff14;
+        margin: 15px 0;
     }
 
     /* Settings screen layout */
     .settings-content {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
+        font-size: 25px;
+    }
+
+    select {
+        padding: 5px 10px;
+        font-size: 20px;
+        border-radius: 5px;
+        border: 1px solid #39ff14;
+        background-color: #000;
+        color: #39ff14;
     }
 
 </style>
@@ -339,25 +360,28 @@
 
                     <div class="ring">
                         <svg width="120" height="120">
-                        <circle cx="60" cy="60" r="48"
-                            stroke="rgba(57,255,20,0.12)"
-                            stroke-width="12" fill="none"></circle>
+                            <circle cx="60" cy="60" r="48"
+                                stroke="rgba(57,255,20,0.12)"
+                                stroke-width="12" fill="none">
+                            </circle>
 
-                        <circle id="cpuRingFill" cx="60" cy="60" r="48"
-                            stroke="url(#grad)" stroke-width="12"
-                            fill="none" stroke-linecap="round"
-                            stroke-dasharray="301.59"
-                            stroke-dashoffset="301.59"
-                            transform="rotate(90 60 60)"></circle>
+                            <circle id="cpuRingFill" class="ringFill" cx="60" cy="60" r="48"
+                                stroke="url(#grad)" stroke-width="12"
+                                fill="none" stroke-linecap="round"
+                                stroke-dasharray="301.59"
+                                stroke-dashoffset="301.59"
+                                transform="rotate(90 60 60)">
+                            </circle>
 
-                        <defs>
-                            <linearGradient id="grad" x1="0" x2="1">
-                                <stop offset="0" stop-color="#39ff14"/>
-                                <stop offset="1" stop-color="#9cff88"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="ring-center" id="cpuLoad">0%</div>
+                            <defs>
+                                <linearGradient id="grad" x1="0" x2="1">
+                                    <stop offset="0" stop-color="#39ff14"/>
+                                    <stop offset="1" stop-color="#9cff88"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="ring-center" id="cpuLoad">0%</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -412,7 +436,7 @@
                                 stroke-width="12" fill="none">
                             </circle>
 
-                            <circle id="gpuRingFill" cx="60" cy="60" r="48"
+                            <circle id="gpuRingFill" class="ringFill" cx="60" cy="60" r="48"
                                 stroke="url(#grad)" stroke-width="12"
                                 fill="none" stroke-linecap="round"
                                 stroke-dasharray="301.59"
@@ -432,12 +456,20 @@
                 </div>
             </div>
         </div>
-
     </div>
 
+    <!-- User Screen -->
+    <div class="main-content" id="user-screen">
+        <p>User settings go here</p>
+    </div>
+
+
+    <!-- Settings Screen -->
     <div class="main-content" id="settings-screen">
+        <div class="settings-header">Settings</div>
+        <div class="settings-divider"></div>
         <div class="settings-content">
-            <label for="temp-units">Temp Units:</label>
+            <label for="temp-units">Temp Unit:</label>
             <select id="temp-units">
                 <option value="C">C</option>
                 <option value="F">F</option>

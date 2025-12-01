@@ -8,9 +8,9 @@ const __dirname = path.dirname(__filename);
 const appStartTime = Date.now();
 let monitorProcess;
 function startMonitor() {
-    const exePath = path.join(__dirname, "..", "monitor", "LibreHardwareMonitor.exe");
+    const exePath = path.join(__dirname, "../monitor/LibreHardwareMonitor.exe");
     monitorProcess = spawn(exePath, [], {
-        detached: true,
+        detached: false,
         windowsHide: true,
         stdio: "ignore"
     });
@@ -23,6 +23,7 @@ function stopMonitor() {
     if (monitorProcess) {
         try {
             monitorProcess.kill();
+            monitorProcess = null;
             console.log("LibreHardwareMonitor stopped.");
         }
         catch (err) {
@@ -36,7 +37,7 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
+            preload: path.join(__dirname, "stat-loader.js"),
             nodeIntegration: true, // allow Node modules in renderer
             contextIsolation: true // enables context bridge
         }
@@ -45,7 +46,7 @@ function createWindow() {
     win.webContents.on("did-finish-load", () => {
         win.webContents.send("startup-timestamp", appStartTime);
     });
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
 }
 app.whenReady().then(createWindow);
 app.on("will-quit", () => {
