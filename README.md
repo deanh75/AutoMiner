@@ -1,8 +1,8 @@
 TODO List:
 
 1. Worker App:
-   1. Make temp unit change hardware monitor setting and remember setting
-   2. Add setting to change IP and Port for hardware monitor
+   1. Add setting to change the Port for hardware monitor
+   2. Add setting to change hardware monitor update interval
    3. Add setting to change background and primary color
    4. Add settings for miner and find way to change miner config file
    5. Add User screen and settings

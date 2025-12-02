@@ -52,13 +52,13 @@ async function updateStaticCPUInfo() {
     cpuThreadsEl.textContent = (await window.systemInfo.getCPUThreads()).toString();
     cpuSpeedEl.textContent = await window.systemInfo.getCPUSpeed();
 }
-// async function updateDynamicCPUInfo() {
-//     if (!window.systemInfo) return;
-//     cpuSpeedEl.textContent = await window.systemInfo.getCPUSpeed();
-// }
-updateStaticCPUInfo();
-// setInterval(updateDynamicCPUInfo, 5000);
-// updateDynamicCPUInfo();
+window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        console.log("Calling updateStaticCPUInfo...");
+        updateStaticCPUInfo();
+    }, 100);
+});
+// updateStaticCPUInfo();
 setInterval(updateStats, 1000);
 updateStats();
 export {};

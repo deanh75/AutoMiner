@@ -20,5 +20,20 @@ declare global {
         appInfo: {
             getDynamicUptime: () => string;
         };
+
+        monitorSettings: {
+            writeConfigValue: (key: string, value: string) => Promise<void>;
+            readConfigValue: (key: string) => Promise<string>;
+        };
+
+        monitorControl: {
+            startMonitor: () => void;
+            stopMonitor: () => void;
+        };
+
+        ipSettings: {
+            setIpAddress: (address: string) => void;
+            setPort: (newPort: number) => void;
+        }
     }
 }

@@ -62,16 +62,14 @@ async function updateStaticCPUInfo() {
     cpuSpeedEl.textContent = await window.systemInfo.getCPUSpeed();
 }
 
-// async function updateDynamicCPUInfo() {
-//     if (!window.systemInfo) return;
+window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        console.log("Calling updateStaticCPUInfo...");
+        updateStaticCPUInfo();
+    }, 100);
+});
 
-//     cpuSpeedEl.textContent = await window.systemInfo.getCPUSpeed();
-// }
-
-updateStaticCPUInfo();
-
-// setInterval(updateDynamicCPUInfo, 5000);
-// updateDynamicCPUInfo();
+// updateStaticCPUInfo();
 
 setInterval(updateStats, 1000);
 updateStats();

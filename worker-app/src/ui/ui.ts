@@ -37,19 +37,16 @@ function showScreen(screenName: keyof typeof screens) {
 // Add click listeners to buttons
 buttons.home?.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log("Home screen shown");
     showScreen('home');
 });
 
 buttons.user?.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log("User screen shown");
     showScreen('user');
 });
 
 buttons.settings?.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log("Settings screen shown");
     showScreen('settings');
 });
 
