@@ -1,8 +1,8 @@
 let lastTempUnit = "";
-let lastIpAddress = "";
+let lastPort = "";
 
 const tempDropdown = document.getElementById("temp-units") as HTMLSelectElement;
-const ipDropdown = document.getElementById("ip-addresses") as HTMLSelectElement;
+const portInput = document.getElementById("portInput") as HTMLInputElement;
 
 async function saveHardwareSettings() {
     if (!window.monitorSettings) return;
@@ -10,13 +10,13 @@ async function saveHardwareSettings() {
     if (!window.ipSettings) return;
 
     window.monitorSettings.writeConfigValue("TemperatureUnit", tempDropdown.value === "C" ? "0" : "1");
-    const realAddress = ipDropdown.value === "default" ? "192.168.128.1" : ipDropdown.value;
-    window.monitorSettings.writeConfigValue("listenerIp", realAddress);
+    window.monitorSettings.writeConfigValue("listenerPort", portInput.value);
 
     window.monitorControl.stopMonitor();
     setTimeout(() => window.monitorControl.startMonitor(), 250);
 
-    window.ipSettings.setIpAddress(realAddress);
+    console.log("Setting IP port to:", portInput.value);
+    window.ipSettings.setPort(parseInt(portInput.value, 10));
 }
 
 async function readHardwareSettings() {
@@ -27,9 +27,14 @@ async function readHardwareSettings() {
     lastTempUnit = tempDropdown.value;
 
     const address = await window.monitorSettings.readConfigValue("listenerIp")
-    ipDropdown.value = address === "192.168.128.1" ? "default" : address;
-    lastIpAddress = ipDropdown.value;
+    console.log("Setting IP address to:", address);
     window.ipSettings.setIpAddress(address);
+
+    const port = await window.monitorSettings.readConfigValue("listenerPort");
+    portInput.value = port;
+    lastPort = port;
+    console.log("Set port input to:", port);
+    window.ipSettings.setPort(parseInt(port, 10));
 }
 
 tempDropdown.addEventListener("change", async () => {
@@ -38,10 +43,10 @@ tempDropdown.addEventListener("change", async () => {
         lastTempUnit = tempDropdown.value;
     }
 });
-ipDropdown.addEventListener("change", async () => {
-    if (ipDropdown.value !== lastIpAddress) {
+portInput.addEventListener("change", async () => {
+    if (portInput.value !== lastPort) {
         saveHardwareSettings();
-        lastIpAddress = ipDropdown.value;
+        lastPort = portInput.value;
     }
 });
 

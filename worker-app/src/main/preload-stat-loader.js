@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import * as si from "systeminformation";
 let startTime = 0;
 const sensorCache = {};
-let ipAddress = "192.168.128.1";
+let ipAddress = "N/A";
 let port = 8085;
 ipcRenderer.on("startup-timestamp", (_, ts) => {
     startTime = ts;
@@ -35,6 +35,10 @@ contextBridge.exposeInMainWorld("appInfo", {
 });
 async function loadSensorData() {
     try {
+        if (ipAddress === "N/A") {
+            console.log("IP address not set yet");
+            return null;
+        }
         const address = ipAddress + ":" + port;
         const response = await fetch("http://" + address + "/data.json");
         if (!response.ok) {
@@ -123,7 +127,14 @@ async function getSensorValue(key, type, text, imageURL) {
     return imageURL ? node.Text ?? "N/A" : node.Value ?? "N/A";
 }
 contextBridge.exposeInMainWorld("systemInfo", {
-    getCPUName: async () => await getSensorValue("CPUName", undefined, undefined, "images_icon/cpu.png"),
+    getCPUName: async () => {
+        const cpu = await getSensorValue("CPUName", undefined, undefined, "images_icon/cpu.png");
+        const index = cpu.indexOf("w/");
+        if (index === -1) {
+            return cpu; // no "w/" found
+        }
+        return cpu.slice(0, index).trim();
+    },
     getCPUCores: async () => {
         const cpu = await si.cpu();
         return cpu.physicalCores + "-Core Processor";
@@ -138,8 +149,20 @@ contextBridge.exposeInMainWorld("systemInfo", {
         const cpu = await si.cpu();
         return cpu.speed + " GHz";
     },
-    getGPU: async () => await getSensorValue("GPU", undefined, undefined, "images_icon/nvidia.png"),
-    getGPUTemp: async () => await getSensorValue("GPUTemp", "Temperature", "GPU Core"),
+    getGPU: async () => {
+        let gpu = await getSensorValue("GPU", undefined, undefined, "images_icon/nvidia.png");
+        if (gpu === "N/A") {
+            gpu = await getSensorValue("GPU", undefined, undefined, "images_icon/ati.png");
+        }
+        return gpu;
+    },
+    getGPUTemp: async () => {
+        let temp = await getSensorValue("GPUTemp", "Temperature", "GPU Core");
+        if (temp === "N/A") {
+            temp = await getSensorValue("GPUTemp", "Temperature", "GPU VR SoC");
+        }
+        return temp;
+    },
     getGPUCoreClock: async () => {
         const coreClockString = await getSensorValue("GPUCoreClock", "Clock", "GPU Core");
         return coreClockString.replace(/\.\d+/g, "");

@@ -270,6 +270,16 @@
         color: #39ff14;
     }
 
+    .settings-content input[type="number"] {
+        padding: 5px 10px;
+        font-size: 20px;
+        border-radius: 5px;
+        border: 1px solid #39ff14;
+        background-color: #000;
+        color: #39ff14;
+        width: 75px;
+    }
+
     .setting-item {
         display: flex;
         align-items: center;
@@ -484,21 +494,18 @@
                     <option value="F">F</option>
                 </select>
             </div>
-
-            <div class="setting-item">
-                <label for="ip-addresses">IP Address:</label>
-                <select id="ip-addresses">
-                    <option value="default">192.168.128.1</option>
-                    <option value="192.168.56.1">192.168.56.1</option>
-                    <option value="192.168.1.254">192.168.1.254</option>
-                    <option value="192.168.195.1">192.168.195.1</option>
-                </select>
-            </div>
             
             <div class="setting-item">
                 <label for="portInput">Port:</label>
                 <input id="portInput" type="number" min="1" max="9999" step="1" value="8085" />
-            </div>     
+            </div>
+            
+            <div class="setting-item">
+                <label for="updateInterval">Update Interval:</label>
+                <select id="updateInterval">
+                    
+                </select>
+            </div>
         </div>
     </div>
 
